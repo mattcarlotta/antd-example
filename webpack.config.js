@@ -1,5 +1,5 @@
 const devServer = require('./config/devServer');
-const getPlugins = require('./config/plugins');
+const plugins = require('./config/plugins');
 const optimization = require('./config/optimization');
 const output = require('./config/output');
 const rules = require('./config/rules');
@@ -24,6 +24,7 @@ module.exports = {
   resolve: {
     modules: ['src', 'node_modules'],
     extensions: ['*', '.js', '.jsx', '.css', '.scss'],
+    mainFields: ['browser', 'module', 'main'],
   },
-  plugins: getPlugins(),
+  plugins,
 };
