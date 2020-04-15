@@ -1,5 +1,9 @@
 import React from "react";
-import { Table } from "antd";
+import dynamic from "next/dynamic";
+
+const Table = dynamic(() => import("antd").then((mod) => mod.Table), {
+  ssr: false,
+});
 
 const dataSource = [
   {
