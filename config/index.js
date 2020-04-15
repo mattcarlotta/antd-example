@@ -4,6 +4,5 @@ module.exports = {
   rules: require("./rules"),
   plugins: require("./plugins"),
   optimizations: require("./optimizations"),
-  paths: require("./paths"),
 };
 /* eslint-enable */

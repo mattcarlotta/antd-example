@@ -2,7 +2,7 @@ import React from "react";
 import dynamic from "next/dynamic";
 import "antd/dist/antd.min.css";
 
-const Table = dynamic(() => import("antd/lib/table"), {
+const Table = dynamic(() => import("antd").then((mod) => mod.Table), {
   ssr: false,
 });
 

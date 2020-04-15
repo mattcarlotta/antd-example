@@ -2,7 +2,6 @@
 // WEBPACK PATHS                                                   //
 // =============================================================== //
 
-const { PWD } = process.env;
 const publicPath = "/_next/static";
 
 module.exports = {
@@ -28,6 +27,4 @@ module.exports = {
   staticCSSDevPath: "static/css/[name].css",
   /* static css assets for production */
   staticCSSProdPath: "static/css/[name].[contenthash:8].css",
-  /* path to required ant design icons */
-  icons: `${PWD}/icons/index.js`,
 };
