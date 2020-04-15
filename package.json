@@ -23,7 +23,8 @@
     "test:failed": "NODE_ENV=test jest --config ./jest.json --watch --onlyFailures",
     "test:cov": "NODE_ENV=test jest --config ./jest.json --coverage",
     "test:watch": "NODE_ENV=test jest --config ./jest.json --watch --onlyChanged",
-    "test:watchall": "NODE_ENV=test jest --config ./jest.json --watchAll"
+    "test:watchall": "NODE_ENV=test jest --config ./jest.json --watchAll",
+    "outputs": "yarn analyze && git checkout dynamic && yarn analyze && git checkout unoptimized && yarn analyze && git checkout master"
   },
   "lint-staged": {
     "*.{js,jsx}": [
