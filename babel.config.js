@@ -4,10 +4,7 @@ module.exports = (api) => {
   return {
     presets: ["next/babel"],
     plugins: [
-      [
-        "import",
-        { libraryName: "antd", libraryDirectory: "lib", style: "css" },
-      ],
+      ["import", { libraryName: "antd", libraryDirectory: "es", style: "css" }],
       [
         "import",
         {
