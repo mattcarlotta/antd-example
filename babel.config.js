@@ -1,4 +1,4 @@
-module.exports = api => {
+module.exports = (api) => {
   api.cache(true);
 
   return {
@@ -7,6 +7,15 @@ module.exports = api => {
       [
         "import",
         { libraryName: "antd", libraryDirectory: "lib", style: "css" },
+      ],
+      [
+        "import",
+        {
+          libraryName: "@ant-design/icons",
+          libraryDirectory: "lib/icons",
+          camel2DashComponentName: false,
+        },
+        "@ant-design/icons",
       ],
     ],
   };
