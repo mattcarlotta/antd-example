@@ -1,105 +1,88 @@
-const MiniCssExtractPlugin = require("mini-css-extract-plugin").loader;
-const { fontsFolder } = require("./paths");
-const { inDevelopment, localIdentName } = require("./envs");
+const {
+  fontsPublicPath,
+  fontsFolder,
+  imagesPublicPath,
+  imagesFolder,
+} = require("./paths");
+const { jsRule, mediaRule, styleRule } = require("./helpers");
 
-// =============================================================== //
-// WEBPACK RULES                                                   //
-// =============================================================== //
+const { inDevelopment } = process.env;
 
-/* defines a javascript rule */
-const jsRule = ({ enforce, loader, options }) => ({
-  enforce: enforce || "post",
-  test: /\.(js|jsx)$/,
-  loader,
-  exclude: /(node_modules)/,
-  options: options || {},
-});
+const inDev = inDevelopment === "true";
 
-/* defines a media (font/image) rule */
-const mediaRule = ({ test, outputPath }) => ({
-  test,
-  use: [
-    {
-      loader: "file-loader",
-      options: {
-        outputPath,
-      },
-    },
-  ],
-});
-
-/* defines a SCSS rule */
-const cssRule = ({ include, exclude, modules, sourceMap, test }) => ({
-  test,
-  include,
-  exclude,
-  use: [
-    inDevelopment ? "style-loader" : MiniCssExtractPlugin,
-    {
-      loader: "css-loader",
-      options: {
-        sourceMap: sourceMap || !inDevelopment,
-        modules: {
-          mode: modules ? "local" : "global",
-          localIdentName,
-        },
-        localsConvention: "camelCase",
-      },
-    },
-    "sass-loader",
-  ],
-});
-
+const imagesRegex = /\.(jpe?g|png|svg|gif|ico|webp)$/;
+const fontsRegex = /\.(woff2|ttf|woff|eot)$/;
 const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
 const scssRegex = /\.scss$/;
 const scssModuleRegex = /\.module\.scss$/;
+const sassRegex = /\.sass$/;
+const sassModuleRegex = /\.module\.sass$/;
 
-/* webpack module rules */
-const rules = [
-  /* lints JS files on compilation */
+const styleRules = [
+  {
+    /* handles global CSS imports */
+    test: cssRegex,
+    exclude: cssModuleRegex,
+  },
+  {
+    /* handles CSS module imports */
+    test: cssRegex,
+    include: cssModuleRegex,
+    modules: true,
+  },
+  {
+    /* handles global SCSS imports */
+    test: scssRegex,
+    exclude: scssModuleRegex,
+  },
+  {
+    /* handles SCSS module imports */
+    test: scssRegex,
+    include: scssModuleRegex,
+    modules: true,
+  },
+  {
+    /* handles global SASS imports */
+    test: sassRegex,
+    exclude: sassModuleRegex,
+  },
+  {
+    /* handles SASS module imports */
+    test: sassRegex,
+    include: sassModuleRegex,
+    modules: true,
+  },
+];
+
+module.exports = (isServer) => [
+  /* lints js files */
   jsRule({
-    enforce: "pre",
     loader: "eslint-loader",
     options: {
-      emitWarning: inDevelopment,
+      cache: inDev,
+      emitWarning: inDev,
     },
   }),
-  /* handle React JS files */
-  jsRule({
-    loader: "babel-loader",
+  /* handle image assets */
+  mediaRule({
+    test: imagesRegex,
+    loader: "url-loader",
     options: {
-      cacheDirectory: inDevelopment,
-      cacheCompression: false,
+      limit: 8192,
+      fallback: "file-loader",
+      publicPath: imagesPublicPath,
+      outputPath: imagesFolder,
     },
   }),
   /* handle font assets */
   mediaRule({
-    test: /\.(woff2|ttf|woff|eot|svg)$/,
-    outputPath: fontsFolder,
+    test: fontsRegex,
+    loader: "file-loader",
+    options: {
+      publicPath: fontsPublicPath,
+      outputPath: fontsFolder,
+    },
   }),
-  /* handle css */
-  cssRule({
-    test: cssRegex,
-    exclude: cssModuleRegex,
-  }),
-  /* handle css modules */
-  cssRule({
-    test: cssRegex,
-    include: [cssModuleRegex],
-    modules: true,
-  }),
-  /* handle scss */
-  cssRule({
-    test: scssRegex,
-    exclude: scssModuleRegex,
-  }),
-  /* handle scss modules */
-  cssRule({
-    test: scssRegex,
-    include: scssModuleRegex,
-    modules: true,
-  }),
+  ...styleRules.map((options) => styleRule({ ...options, isServer })),
 ];
-
-module.exports = rules;
