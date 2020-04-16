@@ -16,6 +16,7 @@ module.exports = {
     /* adds custom rules to client and server */
     config.module.rules.push(...rules(isServer));
 
+    /* aliases @ant-design icon exports to user-defined file */
     if (!isServer) {
       config.resolve.alias = {
         ...config.resolve.alias,
